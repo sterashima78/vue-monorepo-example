@@ -1,0 +1,23 @@
+{
+  "name": "vue3-app",
+  "version": "0.0.0",
+  "scripts": {
+    "build:dep": "npm run build:vue3 --prefix ../../ --workspace=components",
+    "predev": "npm run build:dep",
+    "dev": "vite",
+    "prebuild": "npm run build:dep",
+    "build": "vue-tsc --noEmit && vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.0.5",
+    "components": "^1.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^1.2.2",
+    "@vue/compiler-sfc": "^3.0.5",
+    "typescript": "^4.1.3",
+    "vite": "^2.2.3",
+    "vue-tsc": "^0.0.24"
+  }
+}

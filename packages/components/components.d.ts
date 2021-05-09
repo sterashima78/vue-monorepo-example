@@ -1,7 +1,3 @@
-import Vue, { PluginFunction, VueConstructor } from 'vue';
+import Vue, { VueConstructor } from 'vue';
 
-
-declare const Components: PluginFunction<any>;
-export default Components;
-
-export const ComponentsSample: VueConstructor<Vue>;
+export const MyButton: VueConstructor<Vue>;

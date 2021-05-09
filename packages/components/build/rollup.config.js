@@ -1,7 +1,9 @@
 // rollup.config.js
 import fs from 'fs';
 import path from 'path';
-import vue from 'rollup-plugin-vue';
+import vue3 from 'rollup-plugin-vue';
+import vue2 from 'rollup-plugin-vue2';
+import PostCSS from 'rollup-plugin-postcss';
 import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
@@ -9,6 +11,8 @@ import replace from '@rollup/plugin-replace';
 import babel from '@rollup/plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import minimist from 'minimist';
+
+const vue = process.env.VUE_VERSION === '2' ? vue2 : vue3
 
 // Get browserslist config and remove ie from es build targets
 const esbrowserslist = fs.readFileSync('./.browserslistrc')
@@ -24,6 +28,18 @@ const argv = minimist(process.argv.slice(2));
 
 const projectRoot = path.resolve(__dirname, '..');
 
+
+const postCssConfig = [
+  // Process only `<style module>` blocks.
+  PostCSS({
+    modules: {
+      generateScopedName: '[local]___[hash:base64:5]',
+    },
+    include: /&module=.*\.css$/,
+  }),
+  // Process all `<style>` blocks except `<style module>`.
+  PostCSS({ include: /(?<!&module=.*)\.css$/ }),
+]
 const baseConfig = {
   input: 'src/entry.ts',
   plugins: {
@@ -40,16 +56,17 @@ const baseConfig = {
     replace: {
       'process.env.NODE_ENV': JSON.stringify('production'),
     },
-    vue: {
+    vue: process.env.VUE_VERSION === '2' ? {
       css: true,
       template: {
         isProduction: true,
       },
-    },
+    } : {},
     postVue: [
       resolve({
         extensions: ['.js', '.jsx', '.ts', '.tsx', '.vue'],
       }),
+      ...(process.env.VUE_VERSION === '2' ? [] : postCssConfig),
       commonjs(),
     ],
     babel: {
@@ -66,6 +83,7 @@ const external = [
   // list external dependencies, exactly the way it is written in the import statement.
   // eg. 'jquery'
   'vue',
+  'vue-demi'
 ];
 
 // UMD/IIFE shared settings: output.globals
@@ -74,6 +92,7 @@ const globals = {
   // Provide global variable names to replace your external imports
   // eg. jquery: '$'
   vue: 'Vue',
+  'vue-demi': 'VueDemi'
 };
 
 // Customize configs for individual targets

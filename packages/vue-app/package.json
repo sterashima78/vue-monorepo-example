@@ -3,7 +3,10 @@
   "version": "1.1.0",
   "private": true,
   "scripts": {
+    "build:dep": "npm run build:vue2 --prefix ../../ --workspace=components",
+    "preserve": "npm run build:dep",
     "serve": "vue-cli-service serve",
+    "prebuild": "npm run build:dep",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
@@ -14,7 +17,8 @@
     "@vue/composition-api": "^1.0.0-rc.8",
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
-    "vue-router": "^3.2.0"
+    "vue-router": "^3.2.0",
+    "components": "^1.0.0"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^6.2.0",

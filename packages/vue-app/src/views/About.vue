@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { defineComponent } from "@vue/composition-api";
-import MyButton from "@/components/MyButton.vue"; // @ is an alias to /src
+import { MyButton } from "components";
 
 export default defineComponent({
   name: "About",
